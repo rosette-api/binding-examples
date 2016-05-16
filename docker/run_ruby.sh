@@ -21,19 +21,6 @@ function checkAPI {
     if [ ! -z $match ]; then
         echo -e "\nInvalid Rosette API Key"
         exit 1
-    fi  
-}
-
-
-# strip the trailing slash off of the alt_url if necessary
-function cleanURL() {
-    if [ ! -z "${ALT_URL}" ]; then
-        case ${ALT_URL} in
-            */) ALT_URL=${ALT_URL::-1}
-                echo "Slash detected"
-                ;;
-        esac
-        ping_url=${ALT_URL}
     fi
 }
 
@@ -43,7 +30,7 @@ function validateURL() {
     if [ "${match}" = "" ]; then
         echo -e "\n${ping_url} server not responding\n"
         exit 1
-    fi  
+    fi
 }
 
 function runExample() {
@@ -56,7 +43,7 @@ function runExample() {
     fi
     echo "${result}"
     echo -e "\n---------- ${1} end -------------"
-    for err in "${errors[@]}"; do 
+    for err in "${errors[@]}"; do
         if [[ ${result} == *"${err}"* ]]; then
             retcode=1
         fi
@@ -66,7 +53,7 @@ function runExample() {
 #------------ End Functions ----------------------------
 
 #Gets API_KEY, FILENAME and ALT_URL if present
-while getopts ":API_KEY:FILENAME:ALT_URL" arg; do
+while getopts ":API_KEY:FILENAME:ALT_URL:GIT_USERNAME:VERSION" arg; do
     case "${arg}" in
         API_KEY)
             API_KEY=${OPTARG}
@@ -83,17 +70,17 @@ while getopts ":API_KEY:FILENAME:ALT_URL" arg; do
     esac
 done
 
-cleanURL
-
 validateURL
 
+#Intall rosette_api from RubyGems
+gem install rosette_api
+
 #Copy the mounted content in /source to current WORKDIR
-cp -r -n /source/. .
+cp /source/examples/*.* .
 
 #Run the examples
 if [ ! -z ${API_KEY} ]; then
     checkAPI
-    cd examples
     if [ ! -z ${FILENAME} ]; then
         runExample ${FILENAME}
     else
@@ -101,7 +88,7 @@ if [ ! -z ${API_KEY} ]; then
             runExample ${file}
         done
     fi
-else 
+else
     HELP
 fi
 
