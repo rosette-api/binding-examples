@@ -16,7 +16,6 @@ var endpoint = "entities";
 var entities_text_data = "Bill Murray will appear in new Ghostbusters film: Dr. Peter Venkman was spotted filming a cameo in Boston this… http://dlvr.it/BnsFfS";
 
 api.parameters.content = entities_text_data;
-api.parameters.genre = "social-media";
 api.rosette(endpoint, function(err, res){
 	if(err){
 		console.log(err);
