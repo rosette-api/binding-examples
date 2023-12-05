@@ -1,5 +1,5 @@
 /*
-* Copyright 2014 Basis Technology Corp.
+* Copyright 2023 Basis Technology Corp.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -39,15 +39,17 @@ public final class CategoriesExample extends ExampleBase {
     }
 
     private void run() throws IOException {
-        String categoriesUrlData = "https://www.rosette.com/about/";
+        String categoriesTextData = "If you are a fan of the British television series Downton Abbey and you are planning to be in New York anytime before April 2nd, there is a perfect stop for you while in town.";
         HttpRosetteAPI rosetteApi = new HttpRosetteAPI.Builder()
                                 .key(getApiKeyFromSystemProperty())
                                 .url(getAltUrlFromSystemProperty())
                                 .build();
         //The api object creates an http client, but to provide your own:
         //api.httpClient(CloseableHttpClient)
-        DocumentRequest<CategoriesOptions> request = new DocumentRequest.Builder<CategoriesOptions>().contentUri(categoriesUrlData).build();
-        CategoriesResponse response = rosetteApi.perform(HttpRosetteAPI.CATEGORIES_SERVICE_PATH, request, CategoriesResponse.class);
+        DocumentRequest<CategoriesOptions> request = DocumentRequest.<CategoriesOptions>builder()
+                .content(categoriesTextData)
+                .build();
+        CategoriesResponse response = rosetteApi.perform(CATEGORIES_SERVICE_PATH, request, CategoriesResponse.class);
         System.out.println(responseToJson(response));
     }
 }
